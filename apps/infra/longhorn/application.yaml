@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn-system
+  source:
+    repoURL: https://charts.longhorn.io
+    chart: longhorn
+    targetRevision: "*"
+    helm:
+      values: |
+        persistence:
+          defaultClass: true
+        defaultSettings:
+          defaultDataPath: /var/lib/longhorn
+          defaultReplicaCount: 2
+          storageOverProvisioningPercentage: 200
+          storageMinimalAvailablePercentage: 10
+          nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+          orphanAutoDeletion: true
+          upgradeChecker: false
+          snapshotDataIntegrity: fast-check
+          restoreVolumeRecurringJobs: true
+          allowRecurringJobWhileVolumeDetached: true
+          backupTarget: s3://longhorn@us-east-1/longhorn-backups
+          backupTargetCredentialSecret: longhorn-s3-cred
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [ CreateNamespace=true ]

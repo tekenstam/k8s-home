@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: external-dns
+    targetRevision: "*"
+    helm:
+      values: |
+        provider: cloudflare
+        policy: sync
+        registry: txt
+        txtOwnerId: onprem-k3s
+        domainFilters: [ ekenstam.dev ]
+        sources: [ ingress, service ]
+        cloudflare:
+          secretName: external-dns-cloudflare
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [ CreateNamespace=true ]

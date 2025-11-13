@@ -1,0 +1,9 @@
+# Keys & decrypted artifacts
+age.agekey
+**/*.dec.yaml
+**/*.dec.yml
+**/*.tmp
+**/*.bak
+*.local.yaml
+*.local.yml
+*.zip

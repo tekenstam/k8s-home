@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-vip
+  namespace: kube-system
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-vip
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels: { name: kube-vip }
+  template:
+    metadata:
+      labels: { name: kube-vip }
+    spec:
+      serviceAccountName: kube-vip
+      hostNetwork: true
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: kube-vip
+        image: ghcr.io/kube-vip/kube-vip:v0.8.0
+        args: ["manager"]
+        env:
+        - name: address
+          value: "10.68.69.208"
+        - name: vip_interface
+          value: "eth0"
+        - name: cp_enable
+          value: "true"
+        - name: arp
+          value: "true"
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN","NET_RAW","SYS_TIME"]

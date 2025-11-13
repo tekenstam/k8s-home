@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb-config
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  source:
+    repoURL: https://github.com/tekenstam/k8s-homelab
+    targetRevision: main
+    path: apps/infra/metallb/config/manifests
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
