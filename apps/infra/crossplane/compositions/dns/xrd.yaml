@@ -1,0 +1,28 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xdnsrecords.platform.ekenstam.dev
+spec:
+  group: platform.ekenstam.dev
+  names:
+    kind: XDNSRecord
+    plural: xdnsrecords
+  claimNames:
+    kind: DNSRecord
+    plural: dnsrecords
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                zone: { type: string }
+                name: { type: string }
+                type: { type: string, default: A }
+                content: { type: string }
+                ttl: { type: integer, default: 120 }

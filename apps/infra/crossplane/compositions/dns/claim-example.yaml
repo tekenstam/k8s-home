@@ -1,0 +1,10 @@
+apiVersion: platform.ekenstam.dev/v1alpha1
+kind: DNSRecord
+metadata:
+  name: argocd-public
+spec:
+  zone: ekenstam.dev
+  name: argocd
+  type: CNAME
+  content: argocd.ekenstam.dev
+  ttl: 300

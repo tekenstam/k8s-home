@@ -1,0 +1,13 @@
+apiVersion: s3.aws.crossplane.io/v1beta1
+kind: Bucket
+metadata:
+  name: homelab-artifacts
+spec:
+  forProvider:
+    locationConstraint: us-east-1
+    objectOwnership: BucketOwnerPreferred
+  providerConfigRef:
+    name: aws-default
+  writeConnectionSecretToRef:
+    namespace: crossplane-system
+    name: homelab-artifacts-conn

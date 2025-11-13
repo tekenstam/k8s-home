@@ -1,0 +1,33 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: dnsrecords.cloudflare.platform.ekenstam.dev
+spec:
+  compositeTypeRef:
+    apiVersion: platform.ekenstam.dev/v1alpha1
+    kind: XDNSRecord
+  resources:
+    - name: cf-record
+      base:
+        apiVersion: dns.cloudflare.crossplane.io/v1alpha1
+        kind: Record
+        spec:
+          forProvider:
+            type: A
+            zone: ekenstam.dev
+            name: demo
+            content: 1.2.3.4
+            ttl: 120
+          providerConfigRef:
+            name: cloudflare-default
+      patches:
+        - fromFieldPath: "spec.zone"
+          toFieldPath: "spec.forProvider.zone"
+        - fromFieldPath: "spec.name"
+          toFieldPath: "spec.forProvider.name"
+        - fromFieldPath: "spec.type"
+          toFieldPath: "spec.forProvider.type"
+        - fromFieldPath: "spec.content"
+          toFieldPath: "spec.forProvider.content"
+        - fromFieldPath: "spec.ttl"
+          toFieldPath: "spec.forProvider.ttl"
